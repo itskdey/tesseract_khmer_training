@@ -17,6 +17,12 @@ cd "$ROOT_DIR"
 if [[ "$TESSDATA" != /* ]]; then
   TESSDATA="$ROOT_DIR/${TESSDATA#./}"
 fi
+if [[ "$GROUND_TRUTH_DIR" != /* ]]; then
+  GROUND_TRUTH_DIR="$ROOT_DIR/${GROUND_TRUTH_DIR#./}"
+fi
+if [[ "$OUTPUT_DIR" != /* ]]; then
+  OUTPUT_DIR="$ROOT_DIR/${OUTPUT_DIR#./}"
+fi
 
 python3 scripts/validate_ground_truth.py --ground-truth-dir "$GROUND_TRUTH_DIR"
 
