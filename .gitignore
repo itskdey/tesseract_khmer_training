@@ -1,0 +1,43 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local environment
+.env
+.env.local
+
+# Official dependency checkouts and downloaded models
+tesstrain/
+tessdata_best/*.traineddata
+
+# Raw/private datasets and generated training artifacts
+raw_pages/*
+line_images/*
+ground_truth/*
+ground_truth_fast/
+ground_truth_batch/
+test_images/*
+
+# Keep folder placeholders
+!raw_pages/.gitkeep
+!line_images/.gitkeep
+!ground_truth/.gitkeep
+!test_images/.gitkeep
+
+# Training outputs and exported models
+output/*
+!output/.gitkeep
+
+# Tesseract generated files
+*.box
+*.lstmf
+*.checkpoint
+*.traineddata
+
+# Logs
+*.log
