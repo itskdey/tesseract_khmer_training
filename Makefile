@@ -10,8 +10,9 @@ FAST_LIMIT ?= 5000
 BATCH_SIZE ?= 2000
 ONE_MAX_ITERATIONS ?= 2
 ONE_LEARNING_RATE ?= 0.00001
+COMPARE_APP_PYTHON ?= $(if $(wildcard /opt/homebrew/bin/python3.13),/opt/homebrew/bin/python3.13,python3)
 
-.PHONY: check setup import-archive prepare fast-subset batch batch-finalize batch-status batch-reset validate train train-one train-fast train-batch export compare clean
+.PHONY: check setup import-archive prepare fast-subset batch batch-finalize batch-status batch-reset validate train train-one train-fast train-batch export compare compare-app clean
 
 check:
 	./scripts/check_tools.sh
@@ -61,6 +62,9 @@ export:
 
 compare:
 	./scripts/compare_ocr.sh
+
+compare-app:
+	$(COMPARE_APP_PYTHON) compare_app.py
 
 clean:
 	rm -rf output/checkpoints output/khm_custom output/list.train output/list.eval output/*.lstm output/*.checkpoint

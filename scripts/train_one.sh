@@ -65,20 +65,27 @@ training_dir="$run_dir/training"
 checkpoint_dir="$run_dir/checkpoints"
 mkdir -p "$training_dir" "$checkpoint_dir"
 
-# Use real copies because Tesseract may not follow sandboxed temporary symlinks.
-cp "$image" "$training_dir/sample.png"
-cp "$expected_text" "$training_dir/sample.gt.txt"
+python3 scripts/split_training_page.py \
+  --image "$image" \
+  --text "$expected_text" \
+  --output-dir "$training_dir"
 
-python3 tesstrain/generate_line_box.py \
-  -i "$training_dir/sample.png" \
-  -t "$training_dir/sample.gt.txt" \
-  > "$training_dir/sample.box"
-tesseract "$training_dir/sample.png" "$training_dir/sample" --psm 13 lstm.train
+lstmf_files=()
+for training_text in "$training_dir"/*.gt.txt; do
+  training_stem="${training_text%.gt.txt}"
+  training_image="$training_stem.png"
+  python3 tesstrain/generate_line_box.py \
+    -i "$training_image" \
+    -t "$training_text" \
+    > "$training_stem.box"
+  tesseract "$training_image" "$training_stem" --psm 13 lstm.train
+  lstmf_files+=("$training_stem.lstmf")
+done
 
-printf '%s\n' "$training_dir/sample.lstmf" > "$run_dir/list.train"
-# Tesseract requires an evaluation list. Reusing the supplied example here is
+printf '%s\n' "${lstmf_files[@]}" > "$run_dir/list.train"
+# Tesseract requires an evaluation list. Reusing the supplied examples here is
 # only a runtime requirement; it is not presented as a general accuracy score.
-printf '%s\n' "$training_dir/sample.lstmf" > "$run_dir/list.eval"
+printf '%s\n' "${lstmf_files[@]}" > "$run_dir/list.eval"
 
 combine_tessdata -e "$seed_model" "$run_dir/seed.lstm" >/dev/null
 
