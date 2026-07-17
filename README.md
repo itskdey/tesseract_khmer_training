@@ -127,6 +127,41 @@ the supplied XML text annotations.
 
 ## Training Modes
 
+### Train One Image and Text File
+
+Put exactly one PNG image and its exact text in `train_one/`. The filenames
+must match:
+
+```text
+train_one/sample.png
+train_one/sample.gt.txt
+```
+
+Then run:
+
+```sh
+make train-one
+```
+
+This continues from the current `output/khm_custom.traineddata` (or the base
+Khmer model on the first run), uses a conservative two-iteration update, keeps
+the existing Khmer character set and dictionaries, verifies the result, backs
+up the previous model in `output/backups/`, and updates:
+
+```text
+output/khm_custom.traineddata
+```
+
+To change the small incremental iteration count:
+
+```sh
+make train-one ONE_MAX_ITERATIONS=5
+```
+
+One-example training is useful for targeted corrections, but repeating it many
+times can make general OCR accuracy worse. Keep representative evaluation
+images and compare accuracy after each update.
+
 ### Full Training
 
 Uses all valid pairs in `ground_truth/`:

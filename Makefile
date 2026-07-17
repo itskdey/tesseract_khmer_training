@@ -8,8 +8,10 @@ RATIO_TRAIN ?= 0.90
 TESSTRAIN_JOBS ?= 4
 FAST_LIMIT ?= 5000
 BATCH_SIZE ?= 2000
+ONE_MAX_ITERATIONS ?= 2
+ONE_LEARNING_RATE ?= 0.00001
 
-.PHONY: check setup import-archive prepare fast-subset batch batch-finalize batch-status batch-reset validate train train-fast train-batch export compare clean
+.PHONY: check setup import-archive prepare fast-subset batch batch-finalize batch-status batch-reset validate train train-one train-fast train-batch export compare clean
 
 check:
 	./scripts/check_tools.sh
@@ -43,6 +45,9 @@ validate:
 
 train:
 	MODEL_NAME="$(MODEL_NAME)" START_MODEL="$(START_MODEL)" TESSDATA="$(TESSDATA)" GROUND_TRUTH_DIR="$(GROUND_TRUTH_DIR)" OUTPUT_DIR="$(OUTPUT_DIR)" MAX_ITERATIONS="$(MAX_ITERATIONS)" RATIO_TRAIN="$(RATIO_TRAIN)" TESSTRAIN_JOBS="$(TESSTRAIN_JOBS)" ./scripts/train.sh
+
+train-one:
+	MAX_ITERATIONS="$(ONE_MAX_ITERATIONS)" LEARNING_RATE="$(ONE_LEARNING_RATE)" ./scripts/train_one.sh
 
 train-fast: fast-subset
 	$(MAKE) train GROUND_TRUTH_DIR=./ground_truth_fast MAX_ITERATIONS=1500 TESSTRAIN_JOBS=8

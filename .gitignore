@@ -21,12 +21,14 @@ line_images/*
 ground_truth/*
 ground_truth_fast/
 ground_truth_batch/
+train_one/*
 test_images/*
 
 # Keep folder placeholders
 !raw_pages/.gitkeep
 !line_images/.gitkeep
 !ground_truth/.gitkeep
+!train_one/.gitkeep
 !test_images/.gitkeep
 
 # Training outputs and exported models
